@@ -1,22 +1,31 @@
+@use '../../../styles/variables' as *;
+
 .block {
   position: absolute;
   top: 6px;
   border-radius: 10px;
   padding: 8px 10px;
-  color: #0b0f17;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  overflow: hidden;
-  user-select: none;
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease,
+    outline-color 200ms ease,
+    transform 120ms ease;
+
+  will-change: background-color, transform;
+}
+
+.block:hover {
+  transform: translateY(-1px);
 }
 
 .cancelled {
-  background: repeating-linear-gradient(
+  background-color: $bg-cancelled;
+  background-image: repeating-linear-gradient(
     45deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.1) 8px,
-    rgba(255, 255, 255, 0.04) 8px,
-    rgba(255, 255, 255, 0.04) 16px
+    $cancelled-stripe-dark,
+    $cancelled-stripe-dark 6px,
+    $cancelled-stripe-light 6px,
+    $cancelled-stripe-light 12px
   );
 }
 

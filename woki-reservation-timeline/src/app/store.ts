@@ -53,20 +53,24 @@ const reservationsSlice = createSlice({
 });
 
 type UiState = {
-  zoom: number; // 0.5 - 1.5
+  zoom: number;
   search: string;
-  sectorFilter: string[]; // ids
-  statusFilter: string[]; // ReservationStatus[]
+  sectorFilter: string[];
+  statusFilter: string[];
+  selectedReservationIds: string[];
+};
+
+const initialUiState: UiState = {
+  zoom: 1,
+  search: '',
+  sectorFilter: [],
+  statusFilter: [],
+  selectedReservationIds: [],
 };
 
 const uiSlice = createSlice({
   name: 'ui',
-  initialState: {
-    zoom: 1,
-    search: '',
-    sectorFilter: [],
-    statusFilter: [],
-  } as UiState,
+  initialState: initialUiState,
   reducers: {
     setZoom(state, action: PayloadAction<number>) {
       state.zoom = action.payload;
@@ -80,8 +84,29 @@ const uiSlice = createSlice({
     setStatusFilter(state, action: PayloadAction<string[]>) {
       state.statusFilter = action.payload;
     },
+
+    setSelection(state, action: PayloadAction<string[]>) {
+      state.selectedReservationIds = action.payload;
+    },
+    clearSelection(state) {
+      state.selectedReservationIds = [];
+    },
+    toggleSelection(state, action: PayloadAction<{ id: string; additive: boolean }>) {
+      const { id, additive } = action.payload;
+
+      if (!additive) {
+        state.selectedReservationIds = [id];
+        return;
+      }
+
+      const exists = state.selectedReservationIds.includes(id);
+      state.selectedReservationIds = exists
+        ? state.selectedReservationIds.filter((x) => x !== id)
+        : [...state.selectedReservationIds, id];
+    },
   },
 });
+
 
 const staticSlice = createSlice({
   name: 'static',
@@ -94,7 +119,7 @@ const staticSlice = createSlice({
 });
 
 export const { upsertReservation, deleteReservation } = reservationsSlice.actions;
-export const { setZoom, setSearch, setSectorFilter, setStatusFilter } = uiSlice.actions;
+export const { setZoom, setSearch, setSectorFilter, setStatusFilter, setSelection, clearSelection, toggleSelection } = uiSlice.actions;
 
 export const store = configureStore({
   reducer: {

@@ -1,0 +1,104 @@
+// =============================================================================
+// Color Palette - Centralized Design Tokens
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Reservation Status Colors
+// -----------------------------------------------------------------------------
+$status-pending: #FCD34D;
+$status-confirmed: #3B82F6;
+$status-seated: #10B981;
+$status-finished: #9CA3AF;
+$status-no-show: #EF4444;
+$status-cancelled: #6B7280;
+
+// -----------------------------------------------------------------------------
+// Brand / Woki Gradient Colors
+// -----------------------------------------------------------------------------
+$brand-white: #ffffff;
+$brand-orange-light: #fff7ed;
+$brand-orange-medium: #ffedd5;
+$brand-selection: #f97316; // orange-500 for selection outlines
+
+// -----------------------------------------------------------------------------
+// Text Colors
+// -----------------------------------------------------------------------------
+$text-primary: #111827;
+$text-secondary: #213547;
+$text-light: rgba(255, 255, 255, 0.87);
+
+// -----------------------------------------------------------------------------
+// Background Colors
+// -----------------------------------------------------------------------------
+$bg-dark: #242424;
+$bg-dark-secondary: #1a1a1a;
+$bg-light: #ffffff;
+$bg-light-secondary: #f9f9f9;
+$bg-cancelled: #e5e7eb;
+
+// -----------------------------------------------------------------------------
+// UI / Accent Colors
+// -----------------------------------------------------------------------------
+$accent-link: #646cff;
+$accent-link-hover: #535bf2;
+$accent-link-light: #747bff;
+$current-time-marker: #ef4444;
+
+// -----------------------------------------------------------------------------
+// Border / Divider Colors
+// -----------------------------------------------------------------------------
+$border-light: rgba(17, 24, 39, 0.12);
+$border-light-soft: rgba(17, 24, 39, 0.08);
+$border-light-medium: rgba(17, 24, 39, 0.14);
+$border-light-strong: rgba(17, 24, 39, 0.18);
+$border-dark: rgba(0, 0, 0, 0.15);
+
+// -----------------------------------------------------------------------------
+// Glass / Translucent Backgrounds
+// -----------------------------------------------------------------------------
+$glass-white-85: rgba(255, 255, 255, 0.85);
+$glass-white-75: rgba(255, 255, 255, 0.75);
+$glass-white-55: rgba(255, 255, 255, 0.55);
+$glass-white-90: rgba(255, 255, 255, 0.9);
+
+// -----------------------------------------------------------------------------
+// Shadow Colors
+// -----------------------------------------------------------------------------
+$shadow-black: rgba(0, 0, 0, 0.18);
+$shadow-selection: rgba(249, 115, 22, 0.25);
+$shadow-selection-outline: rgba(249, 115, 22, 0.85);
+$shadow-marker: rgba(239, 68, 68, 0.25);
+
+// -----------------------------------------------------------------------------
+// Cancelled Pattern Colors
+// -----------------------------------------------------------------------------
+$cancelled-stripe-dark: rgba(107, 114, 128, 0.35);
+$cancelled-stripe-light: rgba(229, 231, 235, 0.35);
+
+// -----------------------------------------------------------------------------
+// Legend Pattern Colors
+// -----------------------------------------------------------------------------
+$legend-stripe-white: rgba(255, 255, 255, 0.55);
+$legend-stripe-transparent: rgba(0, 0, 0, 0);
+
+// =============================================================================
+// Export for JavaScript/TypeScript usage via CSS Modules
+// =============================================================================
+:export {
+  // Status colors
+  statusPending: $status-pending;
+  statusConfirmed: $status-confirmed;
+  statusSeated: $status-seated;
+  statusFinished: $status-finished;
+  statusNoShow: $status-no-show;
+  statusCancelled: $status-cancelled;
+  
+  // Selection
+  selectionOutline: $shadow-selection-outline;
+  selectionShadow: $shadow-selection;
+  shadowBlack: $shadow-black;
+  
+  // UI
+  borderDark: $border-dark;
+  legendStripeWhite: $legend-stripe-white;
+}

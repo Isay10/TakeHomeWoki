@@ -1,6 +1,7 @@
 import { Input, Button, Segmented, Tooltip } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { setSearch, setZoom } from '../../../app/store';
+import { StatusLegend } from './StatusLegend';
 import styles from './toolbar.module.scss';
 
 const ZOOM_LEVELS = [0.5, 0.75, 1, 1.25, 1.5] as const;
@@ -17,7 +18,6 @@ export function Toolbar() {
   const currentIndex = Math.max(0, ZOOM_LEVELS.indexOf(zoom as (typeof ZOOM_LEVELS)[number]));
 
   const setZoomSafe = (next: number) => {
-    // aseguramos que siempre sea uno de los presets
     const closest = ZOOM_LEVELS.reduce((prev, curr) =>
       Math.abs(curr - next) < Math.abs(prev - next) ? curr : prev
     );
@@ -46,6 +46,7 @@ export function Toolbar() {
       </div>
 
       <div className={styles.zoomWrapper}>
+          <StatusLegend />
         <span className={styles.zoomLabel}>Zoom</span>
 
         <Tooltip title="Zoom out">
