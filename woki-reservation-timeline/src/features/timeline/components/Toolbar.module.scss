@@ -1,0 +1,57 @@
+.toolbar {
+  margin-top: 12px;  
+  padding: 12px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.12);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.searchWrapper {
+  width: 520px;         
+  max-width: 50vw;    
+  min-width: 260px;
+
+  flex: 1 1 260px;
+  box-sizing: border-box;
+}
+
+.zoomWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  flex: 0 1 auto;
+  flex-wrap: wrap;     
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.zoomLabel {
+  font-size: 12px;
+  opacity: 0.8;
+  min-width: 44px;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .searchWrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .zoomWrapper {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
