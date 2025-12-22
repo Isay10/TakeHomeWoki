@@ -1,4 +1,5 @@
 // Timeline styles (Light + Woki gradient + mobile-ready)
+@use '../../styles/variables' as *;
 
 .page {
   height: 100vh;
@@ -6,8 +7,8 @@
   flex-direction: column;
 
   // White base with soft Woki-ish orange gradient
-  background: linear-gradient(135deg, #ffffff 0%, #fff7ed 45%, #ffedd5 100%);
-  color: #111827;
+  background: linear-gradient(135deg, $brand-white 0%, $brand-orange-light 45%, $brand-orange-medium 100%);
+  color: $text-primary;
 }
 
 .board {
@@ -21,20 +22,20 @@
 .corner {
   grid-column: 1;
   grid-row: 1;
-  border-bottom: 1px solid rgba(17, 24, 39, 0.12);
-  border-right: 1px solid rgba(17, 24, 39, 0.12);
+  border-bottom: 1px solid $border-light;
+  border-right: 1px solid $border-light;
 
-  // translucent “glass” to sit on gradient
-  background: rgba(255, 255, 255, 0.85);
+  // translucent "glass" to sit on gradient
+  background: $glass-white-85;
   backdrop-filter: blur(6px);
 }
 
 .header {
   grid-column: 2;
   grid-row: 1;
-  border-bottom: 1px solid rgba(17, 24, 39, 0.12);
+  border-bottom: 1px solid $border-light;
 
-  background: rgba(255, 255, 255, 0.85);
+  background: $glass-white-85;
   backdrop-filter: blur(6px);
 
   position: sticky;
@@ -45,10 +46,10 @@
 .left {
   grid-column: 1;
   grid-row: 2;
-  border-right: 1px solid rgba(17, 24, 39, 0.12);
+  border-right: 1px solid $border-light;
   overflow: auto;
 
-  background: rgba(255, 255, 255, 0.75);
+  background: $glass-white-75;
   backdrop-filter: blur(6px);
 }
 
@@ -58,7 +59,7 @@
   overflow: auto;
 
   // slightly tinted so grid lines are visible
-  background: rgba(255, 255, 255, 0.55);
+  background: $glass-white-55;
 }
 
 .sectorLabel {
@@ -67,7 +68,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+  border-bottom: 1px solid $border-light-soft;
 }
 
 .sectorDot {
@@ -82,10 +83,10 @@
 
   // Light grid: 15m thin, 30m medium, hour bold + horizontal row lines
   background-image:
-    linear-gradient(to right, rgba(17, 24, 39, 0.08) 1px, transparent 1px),
-    linear-gradient(to right, rgba(17, 24, 39, 0.12) 1px, transparent 1px),
-    linear-gradient(to right, rgba(17, 24, 39, 0.18) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(17, 24, 39, 0.08) 1px, transparent 1px);
+    linear-gradient(to right, $border-light-soft 1px, transparent 1px),
+    linear-gradient(to right, $border-light 1px, transparent 1px),
+    linear-gradient(to right, $border-light-strong 1px, transparent 1px),
+    linear-gradient(to bottom, $border-light-soft 1px, transparent 1px);
 
   background-size:
     var(--cell) 100%,
@@ -111,7 +112,7 @@
     grid-row: 2;
 
     border-right: none;
-    border-bottom: 1px solid rgba(17, 24, 39, 0.12);
+    border-bottom: 1px solid $border-light;
 
     display: flex;
     overflow-x: auto;
@@ -119,7 +120,7 @@
     gap: 10px;
     padding: 8px;
 
-    background: rgba(255, 255, 255, 0.85);
+    background: $glass-white-85;
   }
 
   .header {
@@ -136,10 +137,10 @@
     border-bottom: none;
     padding: 8px 10px;
 
-    border: 1px solid rgba(17, 24, 39, 0.14);
+    border: 1px solid $border-light-medium;
     border-radius: 999px;
     white-space: nowrap;
 
-    background: rgba(255, 255, 255, 0.9);
+    background: $glass-white-90;
   }
 }

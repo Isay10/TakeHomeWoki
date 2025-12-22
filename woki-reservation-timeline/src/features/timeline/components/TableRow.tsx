@@ -4,8 +4,11 @@ import type { Table } from '../../../domain/types';
 import { useAppSelector } from '../../../app/hooks';
 import { ReservationBlock } from './ReservationBlock';
 import styles from './TableRow.module.scss';
+import { clearSelection } from '../../../app/store';
+import { useAppDispatch } from '../../../app/hooks';
 
 export function TableRow({ table }: { table: Table }) {
+  const dispatch = useAppDispatch();
   const { byId, idsByTable } = useAppSelector((s) => s.reservations);
   const zoom = useAppSelector((s) => s.ui.zoom);
   const search = useAppSelector((s) => s.ui.search.trim().toLowerCase());
@@ -20,8 +23,9 @@ export function TableRow({ table }: { table: Table }) {
   });
 
   return (
-    <div className={styles.row}>
-      {/* etiqueta de mesa "en el rail" (si querés, luego la hacemos sticky dentro del body) */}
+    <div className={styles.row} onMouseDown={(e) => {
+      if (e.target === e.currentTarget) dispatch(clearSelection());
+    }}>
       <div className={styles.label}>
         {table.name} <span className={styles.capacity}>({table.capacity.min}-{table.capacity.max})</span>
       </div>

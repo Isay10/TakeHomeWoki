@@ -45,7 +45,9 @@ export function TimelinePage() {
             className={styles.grid}
             style={{
               // background grid based on slot width
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               ['--cell' as any]: `${cellWidth}px`,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               ['--row' as any]: `${timelineConfig.rowHeightPx}px`,
             }}
           >
