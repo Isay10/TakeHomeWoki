@@ -2,6 +2,8 @@
 
 Sistema de gestión de reservas para restaurantes con una interfaz de línea de tiempo interactiva. Desarrollado como prueba técnica (Take Home) para Woki.
 
+🌐 **[Ver Demo en Vivo](https://agent-694c0194fe3f1--iridescent-alfajores-d7c937.netlify.app/)**
+
 ![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
 ![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-2.11-764ABC?logo=redux)
