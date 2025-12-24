@@ -44,3 +44,21 @@ export function timelineTotalMinutes(config: TimelineConfig): Minutes {
   const hours = config.endHour - config.startHour;
   return hours * 60;
 }
+
+function tzOffsetForDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const sample = new Date(y, m - 1, d, 12, 0, 0);
+  const offsetMin = sample.getTimezoneOffset();
+  const sign = offsetMin <= 0 ? '+' : '-';
+  const absMin = Math.abs(offsetMin);
+  const hh = String(Math.floor(absMin / 60)).padStart(2, '0');
+  const mm = String(absMin % 60).padStart(2, '0');
+  return `${sign}${hh}:${mm}`;
+}
+
+export function isoAtSlot(dateStr: string, startHour: number, slot: number, slotMinutes = 15): ISODateTime {
+  const totalMin = startHour * 60 + slot * slotMinutes;
+  const hh = String(Math.floor(totalMin / 60) % 24).padStart(2, '0');
+  const mm = String(totalMin % 60).padStart(2, '0');
+  return `${dateStr}T${hh}:${mm}:00${tzOffsetForDate(dateStr)}` as ISODateTime;
+}

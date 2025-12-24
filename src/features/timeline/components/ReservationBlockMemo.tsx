@@ -1,12 +1,12 @@
-import { Tooltip, Tag, Dropdown } from 'antd';
+import { memo, useState } from 'react';
+import { Tooltip, Tag, Dropdown, message } from 'antd';
 import type { MenuProps } from 'antd';
 import type { Reservation, ReservationStatus } from '../../../domain/types';
 import { timelineConfig } from '../../../domain/seed';
-import { minutesFromTimelineStart, minutesToPx, parseIso } from '../../../domain/time';
+import { minutesFromTimelineStart, parseIso, isoAtSlot } from '../../../domain/time';
 import styles from './ReservationBlock.module.scss';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { toggleSelection, deleteReservation, upsertReservation } from '../../../app/store';
-import { useState } from 'react';
 import {
   STATUS_COLORS,
   SELECTION,
@@ -25,25 +25,42 @@ const STATUS_OPTIONS: ReservationStatus[] = [
 ];
 
 type ReservationBlockProps = {
-  reservation: Reservation;
+  reservationId: string;
   zoom: number;
-  rowIndex?: number;
+  rowIndex: number;
   isDragging?: boolean;
+  staggerIndex?: number; 
+  justDropped?: boolean; 
 };
 
-export function ReservationBlock({ reservation, zoom, rowIndex, isDragging }: ReservationBlockProps) {
+function ReservationBlockInner({ 
+  reservationId, 
+  zoom, 
+  rowIndex, 
+  isDragging,
+  staggerIndex = 0,
+  justDropped = false,
+}: ReservationBlockProps) {
   const dispatch = useAppDispatch();
-  const selectedIds = useAppSelector((s) => s.ui.selectedReservationIds);
-  const isSelected = selectedIds.includes(reservation.id);
+  
+  const reservation = useAppSelector((s) => s.reservations.byId[reservationId]);
+  const isSelected = useAppSelector((s) => s.ui.selectedReservationIds.includes(reservationId));
+  
   const { startDrag } = useTimelineInteraction();
-
   const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  if (!reservation) return null;
 
   const startMin = minutesFromTimelineStart(reservation.startTime, timelineConfig);
   const endMin = minutesFromTimelineStart(reservation.endTime, timelineConfig);
-  const x = minutesToPx(startMin, timelineConfig, zoom);
-  const w = Math.max(30, minutesToPx(endMin - startMin, timelineConfig, zoom));
-  const top = rowIndex != null ? rowIndex * timelineConfig.rowHeightPx + 6 : 6;
+  
+  const slotPx = 60 * zoom; // BASE_CELL_PX * zoom
+  const startSlot = startMin / 15;
+  const endSlot = endMin / 15;
+  
+  const x = startSlot * slotPx;
+  const w = Math.max(30, (endSlot - startSlot) * slotPx);
+  const top = rowIndex * timelineConfig.rowHeightPx + 6;
   const color = STATUS_COLORS[reservation.status] ?? '#3B82F6';
 
   const start = parseIso(reservation.startTime);
@@ -87,13 +104,34 @@ export function ReservationBlock({ reservation, zoom, rowIndex, isDragging }: Re
       }
 
       if (key === 'duplicate') {
+        const startMin = minutesFromTimelineStart(reservation.startTime, timelineConfig);
+        const endMin = minutesFromTimelineStart(reservation.endTime, timelineConfig);
+        const durationSlots = (endMin - startMin) / 15;
+        const originalEndSlot = endMin / 15;
+        
+        const newStartSlot = originalEndSlot;
+        const newEndSlot = newStartSlot + durationSlots;
+        
+        const totalSlots = (timelineConfig.endHour - timelineConfig.startHour) * 4;
+        
+        if (newEndSlot > totalSlots) {
+          message.warning('No hay espacio disponible para duplicar esta reserva.');
+          return;
+        }
+        
+        const newStartTime = isoAtSlot(timelineConfig.date, timelineConfig.startHour, newStartSlot, 15);
+        const newEndTime = isoAtSlot(timelineConfig.date, timelineConfig.startHour, newEndSlot, 15);
+        
         const copy: Reservation = {
           ...reservation,
           id: `COPY_${reservation.id}_${Date.now()}`,
+          startTime: newStartTime,
+          endTime: newEndTime,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
         dispatch(upsertReservation(copy));
+        message.success('Reserva duplicada correctamente.');
         return;
       }
 
@@ -119,7 +157,41 @@ export function ReservationBlock({ reservation, zoom, rowIndex, isDragging }: Re
     styles.block,
     isCancelled ? styles.cancelled : '',
     isDragging ? styles.dragging : '',
+    justDropped ? styles.justDropped : '',
+    staggerIndex > 0 ? styles.staggerEnter : '',
   ].filter(Boolean).join(' ');
+
+  const staggerDelay = staggerIndex > 0 ? `${staggerIndex * 30}ms` : '0ms';
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+    setTooltipOpen(false);
+    dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
+    startDrag({ reservationId: reservation.id, pointerEvent: e, mode: 'move' });
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTooltipOpen(false);
+    dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
+  };
+
+  const handleResizeLeft = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+    setTooltipOpen(false);
+    dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
+    startDrag({ reservationId: reservation.id, pointerEvent: e, mode: 'resizeLeft' });
+  };
+
+  const handleResizeRight = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+    setTooltipOpen(false);
+    dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
+    startDrag({ reservationId: reservation.id, pointerEvent: e, mode: 'resizeRight' });
+  };
 
   return (
     <Dropdown menu={menu} trigger={['contextMenu']}>
@@ -140,44 +212,23 @@ export function ReservationBlock({ reservation, zoom, rowIndex, isDragging }: Re
             backgroundColor: isCancelled ? undefined : color,
             outline: isSelected ? `3px solid ${SELECTION.outline}` : 'none',
             boxShadow: isSelected ? getSelectedBoxShadow() : getBlockBoxShadow(),
+            ['--stagger-delay' as string]: staggerDelay,
           }}
-          onContextMenu={(e) => {
-            e.stopPropagation();
-            setTooltipOpen(false);
-            dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
-          }}
-          onPointerDown={(e) => {
-            if (e.button !== 0) return;
-            e.stopPropagation();
-            setTooltipOpen(false);
-            dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
-            startDrag({ reservationId: reservation.id, pointerEvent: e, mode: 'move' });
-          }}
+          onContextMenu={handleContextMenu}
+          onPointerDown={handlePointerDown}
         >
           {/* Left resize handle */}
           <div
             className={styles.resizeHandleLeft}
             data-resize-handle="left"
-            onPointerDown={(e) => {
-              if (e.button !== 0) return;
-              e.stopPropagation();
-              setTooltipOpen(false);
-              dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
-              startDrag({ reservationId: reservation.id, pointerEvent: e, mode: 'resizeLeft' });
-            }}
+            onPointerDown={handleResizeLeft}
           />
 
           {/* Right resize handle */}
           <div
             className={styles.resizeHandleRight}
             data-resize-handle="right"
-            onPointerDown={(e) => {
-              if (e.button !== 0) return;
-              e.stopPropagation();
-              setTooltipOpen(false);
-              dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
-              startDrag({ reservationId: reservation.id, pointerEvent: e, mode: 'resizeRight' });
-            }}
+            onPointerDown={handleResizeRight}
           />
 
           <div className={styles.header}>
@@ -198,3 +249,15 @@ export function ReservationBlock({ reservation, zoom, rowIndex, isDragging }: Re
     </Dropdown>
   );
 }
+
+
+export const ReservationBlock = memo(ReservationBlockInner, (prev, next) => {
+  return (
+    prev.reservationId === next.reservationId &&
+    prev.zoom === next.zoom &&
+    prev.rowIndex === next.rowIndex &&
+    prev.isDragging === next.isDragging &&
+    prev.staggerIndex === next.staggerIndex &&
+    prev.justDropped === next.justDropped
+  );
+});

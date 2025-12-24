@@ -1,6 +1,7 @@
-import { Input, Button, Segmented, Tooltip } from 'antd';
+import { Input, Button, Segmented, Tooltip, Select } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { setSearch, setZoom } from '../../../app/store';
+import { setSearch, setZoom, setSectorFilter, setStatusFilter } from '../../../app/store';
+import { selectSectorsForFilter, STATUS_OPTIONS_FOR_FILTER } from '../../../app/selectors';
 import { StatusLegend } from './StatusLegend';
 import styles from './toolbar.module.scss';
 
@@ -14,6 +15,9 @@ export function Toolbar() {
   const dispatch = useAppDispatch();
   const zoom = useAppSelector((s) => s.ui.zoom);
   const search = useAppSelector((s) => s.ui.search);
+  const sectorFilter = useAppSelector((s) => s.ui.sectorFilter);
+  const statusFilter = useAppSelector((s) => s.ui.statusFilter);
+  const sectorsForFilter = useAppSelector(selectSectorsForFilter);
 
   const currentIndex = Math.max(0, ZOOM_LEVELS.indexOf(zoom as (typeof ZOOM_LEVELS)[number]));
 
@@ -36,17 +40,42 @@ export function Toolbar() {
 
   return (
     <div className={styles.toolbar}>
-      <div className={styles.searchWrapper}>
+      <div className={styles.filtersWrapper}>
         <Input
-          placeholder="Search by name/phone…"
+          className={styles.searchInput}
+          placeholder="Buscar nombre/teléfono…"
           value={search}
           onChange={(e) => dispatch(setSearch(e.target.value))}
           allowClear
         />
+
+        <Select
+          className={styles.filterSelect}
+          mode="multiple"
+          allowClear
+          placeholder="Filtrar por sector"
+          value={sectorFilter}
+          onChange={(value) => dispatch(setSectorFilter(value))}
+          options={sectorsForFilter}
+          maxTagCount={1}
+          maxTagPlaceholder={(omitted) => `+${omitted.length}`}
+        />
+
+        <Select
+          className={styles.filterSelect}
+          mode="multiple"
+          allowClear
+          placeholder="Filtrar por estado"
+          value={statusFilter}
+          onChange={(value) => dispatch(setStatusFilter(value))}
+          options={STATUS_OPTIONS_FOR_FILTER.map((s) => ({ value: s.value, label: s.label }))}
+          maxTagCount={1}
+          maxTagPlaceholder={(omitted) => `+${omitted.length}`}
+        />
       </div>
 
       <div className={styles.zoomWrapper}>
-          <StatusLegend />
+        <StatusLegend />
         <span className={styles.zoomLabel}>Zoom</span>
 
         <Tooltip title="Zoom out">
