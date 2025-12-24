@@ -23,18 +23,24 @@ const STATUS_OPTIONS: ReservationStatus[] = [
   'CANCELLED',
 ];
 
-export function ReservationBlock({ reservation, zoom }: { reservation: Reservation; zoom: number }) {
+type ReservationBlockProps = {
+  reservation: Reservation;
+  zoom: number;
+  rowIndex?: number;
+};
+
+export function ReservationBlock({ reservation, zoom, rowIndex }: ReservationBlockProps) {
   const dispatch = useAppDispatch();
   const selectedIds = useAppSelector((s) => s.ui.selectedReservationIds);
   const isSelected = selectedIds.includes(reservation.id);
 
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
-
   const startMin = minutesFromTimelineStart(reservation.startTime, timelineConfig);
   const endMin = minutesFromTimelineStart(reservation.endTime, timelineConfig);
   const x = minutesToPx(startMin, timelineConfig, zoom);
   const w = Math.max(30, minutesToPx(endMin - startMin, timelineConfig, zoom));
+  const top = rowIndex != null ? rowIndex * timelineConfig.rowHeightPx + 6 : 6;
   const color = STATUS_COLORS[reservation.status] ?? '#3B82F6';
 
   const start = parseIso(reservation.startTime);
@@ -115,9 +121,11 @@ export function ReservationBlock({ reservation, zoom }: { reservation: Reservati
         onOpenChange={setTooltipOpen}
       >
         <div
+          data-reservation-id={reservation.id}
           className={`${styles.block} ${isCancelled ? styles.cancelled : ''}`}
           style={{
             left: x,
+            top,
             height: timelineConfig.rowHeightPx - 12,
             width: w,
             backgroundColor: isCancelled ? undefined : color,
@@ -129,8 +137,9 @@ export function ReservationBlock({ reservation, zoom }: { reservation: Reservati
             setTooltipOpen(false);
             dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
           }}
-          onMouseDown={(e) => {
+          onPointerDown={(e) => {
             e.stopPropagation();
+            setTooltipOpen(false);
             dispatch(toggleSelection({ id: reservation.id, additive: e.ctrlKey || e.metaKey }));
           }}
         >

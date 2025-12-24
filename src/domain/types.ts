@@ -1,9 +1,9 @@
 // Domain types and interfaces
 
 export type UUID = string;
-export type ISODateTime = string; // e.g. "2025-10-15T20:00:00-03:00"
+export type ISODateTime = string; 
 export type Minutes = number;
-export type SlotIndex = number; // 0-based, each slot = 15min
+export type SlotIndex = number; 
 
 export type ReservationStatus =
   | 'PENDING'

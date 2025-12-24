@@ -5,14 +5,24 @@ import { timelineConfig } from '../../../domain/seed';
 import { dayStartDate, formatHHMM } from '../../../domain/time';
 import { useAppSelector } from '../../../app/hooks';
 
-export function TimeHeader() {
+type TimeHeaderProps = {
+  scrollLeft?: number;
+};
+
+export function TimeHeader({ scrollLeft = 0 }: TimeHeaderProps) {
   const zoom = useAppSelector((s) => s.ui.zoom);
   const start = dayStartDate(timelineConfig);
   const slots = (timelineConfig.endHour - timelineConfig.startHour) * (60 / timelineConfig.slotMinutes); // 52
   const cell = timelineConfig.cellWidthPx * zoom;
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div 
+      style={{ 
+        display: 'flex',
+        transform: `translateX(-${scrollLeft}px)`,
+        width: 'fit-content',
+      }}
+    >
       {Array.from({ length: slots }).map((_, i) => {
         const labelDate = addMinutes(start, i * timelineConfig.slotMinutes);
         const isHour = labelDate.getMinutes() === 0;
