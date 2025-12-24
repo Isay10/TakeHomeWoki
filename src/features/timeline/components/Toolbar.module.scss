@@ -5,7 +5,7 @@
   padding: 12px;
   border-bottom: 1px solid $border-light;
   display: flex;
-  gap: 32px;
+  gap: 16px;
   align-items: center;
 
   flex-wrap: wrap;
@@ -16,13 +16,25 @@
   backdrop-filter: blur(6px);
 }
 
-.searchWrapper {
-  width: 520px;         
-  max-width: 50vw;    
-  min-width: 260px;
+.filtersWrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+}
 
-  flex: 1 1 260px;
-  box-sizing: border-box;
+.searchInput {
+  width: 220px;
+  min-width: 160px;
+  flex: 0 1 220px;
+}
+
+.filterSelect {
+  width: 180px;
+  min-width: 140px;
+  flex: 0 1 180px;
 }
 
 .zoomWrapper {
@@ -45,10 +57,14 @@
 }
 
 @media (max-width: 768px) {
-  .searchWrapper {
+  .filtersWrapper {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .searchInput,
+  .filterSelect {
+    width: 100%;
     flex: 1 1 100%;
   }
 

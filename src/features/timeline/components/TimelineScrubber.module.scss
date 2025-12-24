@@ -1,0 +1,115 @@
+@use '../../../styles/variables' as *;
+
+@keyframes scrubberAppear {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes scrubberPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px 2px rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(59, 130, 246, 0.7);
+  }
+}
+
+@keyframes tooltipBounce {
+  0% {
+    transform: translateX(-50%) translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) translateY(-2px) scale(1.05);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.scrubberTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 100;
+  
+  &:hover .scrubberLine {
+    opacity: 0.5;
+  }
+}
+
+.scrubberLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #3B82F6 0%, #60A5FA 50%, #3B82F6 100%);
+  transform-origin: top center;
+  animation: scrubberAppear 200ms ease-out forwards;
+  opacity: 0.7;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+  
+  &.active {
+    width: 3px;
+    opacity: 1;
+    animation: scrubberPulse 1s ease-in-out infinite;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #3B82F6;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.scrubberTooltip {
+  position: absolute;
+  top: 20px;
+  transform: translateX(-50%);
+  background: rgba(30, 41, 59, 0.95);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: tooltipBounce 250ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  &.active {
+    background: #3B82F6;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-bottom-color: rgba(30, 41, 59, 0.95);
+  }
+  
+  &.active::before {
+    border-bottom-color: #3B82F6;
+  }
+}

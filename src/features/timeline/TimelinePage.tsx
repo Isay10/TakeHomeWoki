@@ -1,13 +1,17 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { useAppSelector } from '../../app/hooks';
+import { selectVisibleTables } from '../../app/selectors';
 import { Toolbar } from './components/Toolbar';
 import { TimeHeader } from './components/TimeHeader';
 import { TimelineBody } from './components/TimelineBody';
+import { TimelineScrubber } from './components/TimelineScrubber';
 import { timelineConfig } from '../../domain/seed';
 import styles from './timeline.module.scss';
 
 export function TimelinePage() {
-  const { sectors, tables } = useAppSelector((s) => s.static);
+  const sectors = useAppSelector((s) => s.static.sectors);
+  const visibleTables = useAppSelector(selectVisibleTables);
+  const zoom = useAppSelector((s) => s.ui.zoom);
 
   const bodyRef = useRef<HTMLDivElement>(null!);
   const [headerScrollLeft, setHeaderScrollLeft] = useState(0);
@@ -15,17 +19,16 @@ export function TimelinePage() {
 
   const sectorsById = new Map(sectors.map((s) => [s.id, s]));
 
-  const tablesSorted = [...tables].sort((a, b) => {
-    const sectorA = sectorsById.get(a.sectorId);
-    const sectorB = sectorsById.get(b.sectorId);
-    if (sectorA?.sortOrder !== sectorB?.sortOrder) {
-      return (sectorA?.sortOrder ?? 0) - (sectorB?.sortOrder ?? 0);
-    }
-    return a.sortOrder - b.sortOrder;
-  });
-
   const handleScrollX = (scrollLeft: number) => setHeaderScrollLeft(scrollLeft);
   const handleScrollY = (scrollTop: number) => setBodyScrollTop(scrollTop);
+
+  // Scroll to slot when scrubbing
+  const handleScrub = useCallback((slot: number) => {
+    if (!bodyRef.current) return;
+    const slotPx = timelineConfig.cellWidthPx * zoom;
+    const targetScroll = slot * slotPx - bodyRef.current.clientWidth / 2;
+    bodyRef.current.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
+  }, [zoom]);
 
   return (
     <div className={styles.page}>
@@ -35,6 +38,7 @@ export function TimelinePage() {
         <div className={styles.corner} />
         <div className={styles.header}>
           <TimeHeader scrollLeft={headerScrollLeft} />
+          <TimelineScrubber scrollLeft={headerScrollLeft} onScrub={handleScrub} />
         </div>
 
         <div className={styles.left}>
@@ -42,7 +46,7 @@ export function TimelinePage() {
             className={styles.tableLabels}
             style={{ transform: `translateY(-${bodyScrollTop}px)` }}
           >
-            {tablesSorted.map((table) => {
+            {visibleTables.map((table) => {
               const sector = sectorsById.get(table.sectorId);
               return (
                 <div 

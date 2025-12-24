@@ -1,20 +1,138 @@
 @use '../../../styles/variables' as *;
 
+// ========== KEYFRAME ANIMATIONS ==========
+
+@keyframes springDrop {
+  0% {
+    transform: translateY(-8px) scale(1.02);
+    opacity: 0.8;
+  }
+  40% {
+    transform: translateY(2px) scale(0.98);
+  }
+  70% {
+    transform: translateY(-1px) scale(1.01);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shrinkOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes statusRipple {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes conflictPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(239, 68, 68, 0.6);
+  }
+}
+
+@keyframes staggerIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ========== BASE BLOCK STYLES ==========
+
 .block {
   position: absolute;
   border-radius: 10px;
   padding: 8px 10px;
+  cursor: grab;
+  
   transition:
-    background-color 200ms ease,
+    background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 200ms ease,
     outline-color 200ms ease,
-    transform 120ms ease;
+    transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 150ms ease,
+    left 60ms ease-out,
+    top 60ms ease-out,
+    width 60ms ease-out;
 
-  will-change: background-color, transform;
+  will-change: background-color, transform, opacity, box-shadow;
+  
+  animation: fadeSlideIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .block:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+// ========== ANIMATION STATE CLASSES ==========
+
+// Just dropped - spring physics
+.justDropped {
+  animation: springDrop 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+.staggerEnter {
+  animation: staggerIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+.exiting {
+  animation: shrinkOut 200ms ease-out forwards;
+  pointer-events: none;
+}
+
+.statusChanged {
+  animation: statusRipple 500ms ease-out;
+}
+
+.hasConflict {
+  animation: conflictPulse 1s ease-in-out infinite;
+}
+
+// ========== EXISTING STATES ==========
+
+.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+  transform: scale(0.98);
+  transition: none !important; // Disable transitions during drag for performance
 }
 
 .cancelled {
@@ -27,6 +145,8 @@
     $cancelled-stripe-light 12px
   );
 }
+
+// ========== CONTENT STYLES ==========
 
 .header {
   display: flex;
@@ -61,4 +181,39 @@
 .notes {
   margin-top: 6px;
   opacity: 0.9;
+}
+
+// ========== RESIZE HANDLES ==========
+
+.resizeHandleLeft,
+.resizeHandleRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 150ms ease, background-color 150ms ease;
+}
+
+.resizeHandleLeft {
+  left: 0;
+  border-radius: 10px 0 0 10px;
+}
+
+.resizeHandleRight {
+  right: 0;
+  border-radius: 0 10px 10px 0;
+}
+
+.block:hover .resizeHandleLeft,
+.block:hover .resizeHandleRight {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.resizeHandleLeft:hover,
+.resizeHandleRight:hover {
+  background-color: rgba(0, 0, 0, 0.25) !important;
 }

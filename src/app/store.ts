@@ -11,7 +11,7 @@ type ReservationsState = {
   idsByTable: Record<string, string[]>;
 };
 
-const initialReservations = [...seed.reservations, ...generateReservations(seed, 10)];
+const initialReservations = [...seed.reservations, ...generateReservations(seed, 5)];
 
 function buildReservationsState(reservations: Reservation[]): ReservationsState {
   const byId: Record<string, Reservation> = {};
@@ -23,7 +23,6 @@ function buildReservationsState(reservations: Reservation[]): ReservationsState 
     idsByTable[r.tableId].push(r.id);
   }
 
-  // orden simple por startTime para cada mesa
   for (const tableId of Object.keys(idsByTable)) {
     idsByTable[tableId].sort((a, b) => byId[a].startTime.localeCompare(byId[b].startTime));
   }
@@ -84,7 +83,6 @@ const uiSlice = createSlice({
     setStatusFilter(state, action: PayloadAction<string[]>) {
       state.statusFilter = action.payload;
     },
-
     setSelection(state, action: PayloadAction<string[]>) {
       state.selectedReservationIds = action.payload;
     },
@@ -106,7 +104,6 @@ const uiSlice = createSlice({
     },
   },
 });
-
 
 const staticSlice = createSlice({
   name: 'static',
