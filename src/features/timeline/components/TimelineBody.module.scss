@@ -1,0 +1,42 @@
+@use '../../../styles/variables' as *;
+
+.body {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+}
+
+.grid {
+  position: relative;
+}
+
+.ghost {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 10px;
+
+  &--valid {
+    background: rgba(59, 130, 246, 0.18);
+    outline: 2px solid rgba(59, 130, 246, 0.55);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+  }
+
+  &--conflict {
+    background: rgba(239, 68, 68, 0.22);
+    outline: 2px solid rgba(239, 68, 68, 0.75);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+  }
+}
+
+.prefillAlert {
+  margin-bottom: 12px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.serviceHoursNote {
+  font-size: 12px;
+  opacity: 0.75;
+}

@@ -1,4 +1,3 @@
-// Timeline styles (Light + Woki gradient + mobile-ready)
 @use '../../styles/variables' as *;
 
 .page {
@@ -6,7 +5,6 @@
   display: flex;
   flex-direction: column;
 
-  // White base with soft Woki-ish orange gradient
   background: linear-gradient(135deg, $brand-white 0%, $brand-orange-light 45%, $brand-orange-medium 100%);
   color: $text-primary;
 }
@@ -25,7 +23,6 @@
   border-bottom: 1px solid $border-light;
   border-right: 1px solid $border-light;
 
-  // translucent "glass" to sit on gradient
   background: $glass-white-85;
   backdrop-filter: blur(6px);
 }
@@ -41,6 +38,7 @@
   position: sticky;
   top: 0;
   z-index: 5;
+  overflow: hidden;
 }
 
 .left {
@@ -58,7 +56,6 @@
   grid-row: 2;
   overflow: auto;
 
-  // slightly tinted so grid lines are visible
   background: $glass-white-55;
 }
 
@@ -75,13 +72,40 @@
   width: 10px;
   height: 10px;
   border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.tableLabels {
+  width: 100%;
+}
+
+.tableLabel {
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid $border-light-soft;
+  box-sizing: border-box;
+}
+
+.tableName {
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tableCapacity {
+  font-size: 12px;
+  opacity: 0.6;
+  white-space: nowrap;
 }
 
 .grid {
   position: relative;
   min-width: calc(var(--cell) * 52);
 
-  // Light grid: 15m thin, 30m medium, hour bold + horizontal row lines
   background-image:
     linear-gradient(to right, $border-light-soft 1px, transparent 1px),
     linear-gradient(to right, $border-light 1px, transparent 1px),

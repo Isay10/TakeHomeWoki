@@ -41,7 +41,6 @@ export function formatHHMM(d: Date): string {
 }
 
 export function timelineTotalMinutes(config: TimelineConfig): Minutes {
-  // endHour=24 means midnight; total from 11:00 to 24:00 => 13h => 780
   const hours = config.endHour - config.startHour;
   return hours * 60;
 }
