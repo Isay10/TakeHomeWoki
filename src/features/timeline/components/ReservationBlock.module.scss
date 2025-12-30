@@ -148,10 +148,20 @@
 
 // ========== CONTENT STYLES ==========
 
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
 }
 
 .name {
@@ -160,18 +170,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .priorityTag {
   margin: 0;
+  flex-shrink: 0;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  padding: 2px 6px !important;
 }
 
 .details {
   display: flex;
-  gap: 10px;
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 700;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tooltip {

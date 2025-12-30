@@ -245,7 +245,7 @@ Toolbar mínima:
 - Sector filter (multi)
 - Status filter
 - Search (customer name / phone)
-- Zoom (50–150)
+- Zoom (75–150)
 
 Regla:
 - Search y filtros con debounce (~300ms) si afectan listas grandes.

@@ -555,7 +555,7 @@ export function TimelineBody({ className, gridClassName, scrollerRef, onScrollX,
           className={[styles.grid, gridClassName].filter(Boolean).join(' ')}
           style={{
             minWidth: `calc(var(--cell) * ${TOTAL_SLOTS})`,
-            minHeight: tables.length * timelineConfig.rowHeightPx,
+            minHeight: `max(${tables.length * timelineConfig.rowHeightPx}px, 100%)`,
             ['--cell' as string]: `${slotPx}px`,
             ['--row' as string]: `${timelineConfig.rowHeightPx}px`,
           }}
