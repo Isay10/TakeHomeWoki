@@ -35,7 +35,7 @@ Sistema de gestión de reservas para restaurantes con una interfaz de línea de 
 ### Timeline Interactivo
 - **Vista por día**: Timeline de 11:00 a 00:00 (13 horas)
 - **Slots de 15 minutos**: Granularidad precisa para reservas
-- **Zoom dinámico**: Ajustar nivel de detalle (50% - 200%)
+- **Zoom dinámico**: Ajustar nivel de detalle (75% - 200%)
 - **Scroll sincronizado**: Header y body se mueven juntos
 - **Scrubber**: Navegación rápida por el timeline
 

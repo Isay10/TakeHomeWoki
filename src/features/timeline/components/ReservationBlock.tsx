@@ -180,18 +180,18 @@ export function ReservationBlock({ reservation, zoom, rowIndex, isDragging }: Re
             }}
           />
 
-          <div className={styles.header}>
-            <div className={styles.name}>{reservation.customer.name}</div>
-            <Tag className={styles.priorityTag} color="default">
-              {reservation.priority}
-            </Tag>
-          </div>
+          <div className={styles.content}>
+            <div className={styles.header}>
+              <div className={styles.name}>{reservation.customer.name}</div>
+              <Tag className={styles.priorityTag} color="default">
+                {reservation.priority}
+              </Tag>
+            </div>
 
-          <div className={styles.details}>
-            <span>👥 {reservation.partySize}</span>
-            <span>
-              {hhmm(start)}–{hhmm(end)}
-            </span>
+            <div className={styles.details}>
+              <span>👥 {reservation.partySize}</span>
+              <span>{hhmm(start)}–{hhmm(end)}</span>
+            </div>
           </div>
         </div>
       </Tooltip>

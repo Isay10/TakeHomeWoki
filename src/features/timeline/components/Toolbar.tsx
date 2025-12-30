@@ -5,7 +5,7 @@ import { selectSectorsForFilter, STATUS_OPTIONS_FOR_FILTER } from '../../../app/
 import { StatusLegend } from './StatusLegend';
 import styles from './toolbar.module.scss';
 
-const ZOOM_LEVELS = [0.5, 0.75, 1, 1.25, 1.5] as const;
+const ZOOM_LEVELS = [0.75, 1, 1.25, 1.5] as const;
 
 function toPercent(z: number) {
   return `${Math.round(z * 100)}%`;
@@ -76,7 +76,6 @@ export function Toolbar() {
 
       <div className={styles.zoomWrapper}>
         <StatusLegend />
-        <span className={styles.zoomLabel}>Zoom</span>
 
         <Tooltip title="Zoom out">
           <Button onClick={decZoom} disabled={currentIndex === 0}>

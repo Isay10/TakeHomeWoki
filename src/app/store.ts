@@ -11,7 +11,7 @@ type ReservationsState = {
   idsByTable: Record<string, string[]>;
 };
 
-const initialReservations = [...seed.reservations, ...generateReservations(seed, 5)];
+const initialReservations = [...seed.reservations, ...generateReservations(seed, 0)];
 
 function buildReservationsState(reservations: Reservation[]): ReservationsState {
   const byId: Record<string, Reservation> = {};

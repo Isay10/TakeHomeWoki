@@ -10,7 +10,7 @@ export const timelineConfig: TimelineConfig = {
   viewMode: 'day',
   timezone: 'America/Argentina/Buenos_Aires',
   cellWidthPx: 60,
-  rowHeightPx: 60,
+  rowHeightPx: 120,
 };
 
 export const seed: SeedData = {

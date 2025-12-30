@@ -48,7 +48,7 @@ export function StatusLegend() {
       }
       title="Status colors"
     >
-      <Button size="middle">Legend</Button>
+      <Button size="middle">Referencias</Button>
     </Popover>
   );
 }
